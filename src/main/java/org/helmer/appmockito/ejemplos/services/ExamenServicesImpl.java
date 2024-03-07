@@ -3,6 +3,8 @@ package org.helmer.appmockito.ejemplos.services;
 import org.helmer.appmockito.ejemplos.dao.ExamenRepository;
 import org.helmer.appmockito.ejemplos.models.Examen;
 
+import java.util.Optional;
+
 
 public class ExamenServicesImpl implements ExamenServicios {
     private final ExamenRepository examenRepository;
@@ -33,9 +35,11 @@ public class ExamenServicesImpl implements ExamenServicios {
             return examen;
         }
         */
-    public Examen buscarExamenPorNombre(String nombre) {
+    @Override
+    public Optional<Examen> buscarExamenPorNombre(String nombre) {
         return examenRepository.findAll()
                 .stream()
-                .filter(e -> e.getNombre().contains(nombre)).findFirst().orElse(null);
+                .filter(e -> e.getNombre().contains(nombre)).
+                findFirst();
     }
 }

@@ -9,8 +9,8 @@ import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ExamenServicesImplTest {
@@ -22,9 +22,9 @@ class ExamenServicesImplTest {
         //Creamos una instancia de la clase ExamenServicesImpl
         ExamenServicesImpl examenServices = new ExamenServicesImpl(examenRepository);
         //Creamos una instancia de la clase Examen
-        Examen examen = examenServices.buscarExamenPorNombre("Matematicas");
+        Optional<Examen> examen = examenServices.buscarExamenPorNombre("Matematicas");
         //Comprobamos que el nombre del examen sea igual a "Matematicas"
-        assertEquals("Matematicas", examen.getNombre());
+        assertEquals("Matematicas", examen.orElseThrow().getNombre());
     }
 
     //test con mockito
@@ -67,8 +67,8 @@ class ExamenServicesImplTest {
         //cuando se llame devuelva vacio
         //Mockito.when(examenRepository.findAll()).thenReturn(Arrays.asList());
 
-        Examen examen = examenServices.buscarExamenPorNombre("Matematicas");
-        assertEquals("Matematicas", examen.getNombre());
+        Optional<Examen> examen = examenServices.buscarExamenPorNombre("Matematicas");
+        assertEquals("Matematicas", examen.orElseThrow().getNombre());
 
 
     }
@@ -86,9 +86,9 @@ class ExamenServicesImplTest {
         //Cuando se llame al metodo findAll() de la interfaz ExamenRepository, se devolvera la lista datos
         Mockito.when(examenRepository.findAll()).thenReturn(datos);
 
-        Examen examen = services.buscarExamenPorNombre("Matematicas");
+        Optional<Examen> examen = services.buscarExamenPorNombre("Matematicas");
         assertNotNull(examen);
-        assertEquals("Matematicas", examen.getNombre());
+        assertEquals("Matematicas", examen.orElseThrow().getNombre());
 
     }
     @Test
@@ -101,9 +101,9 @@ class ExamenServicesImplTest {
         //Cuando se llame al metodo findAll() de la interfaz ExamenRepository, se devolvera la lista datos
         Mockito.when(examenRepository.findAll()).thenReturn(datos);
 
-        Examen examen = services.buscarExamenPorNombre("Matematicas");
+        Optional<Examen> examen = services.buscarExamenPorNombre("Matematicas");
         try {
-            assertNull(examen);
+            assertEquals(Optional.empty(), examen);
             System.out.println("el examen es null con mockito");
         } catch (NullPointerException e) {
             System.out.println("e.getMessage() = " + e.getMessage());
