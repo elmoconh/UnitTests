@@ -3,10 +3,9 @@ package org.helmer.appmockito.ejemplos.services;
 import org.helmer.appmockito.ejemplos.dao.ExamenRepository;
 import org.helmer.appmockito.ejemplos.models.Examen;
 
-import java.util.Optional;
 
 public class ExamenServicesImpl implements ExamenServicios {
-    private ExamenRepository examenRepository;
+    private final ExamenRepository examenRepository;
 
     public ExamenServicesImpl(ExamenRepository examenRepository) {
         this.examenRepository = examenRepository;
