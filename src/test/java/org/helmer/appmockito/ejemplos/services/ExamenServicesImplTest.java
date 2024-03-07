@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ExamenServicesImplTest {
@@ -76,18 +77,38 @@ class ExamenServicesImplTest {
     void testConMockito2() {
         //Creamos una instancia de la interfaz ExamenRepository con mockito
         ExamenRepository examenRepository = Mockito.mock(ExamenRepositoryOtro.class);
-        ExamenServicios examenServices = new ExamenServicesImpl(examenRepository);
+        ExamenServicios services = new ExamenServicesImpl(examenRepository);
 
         List<Examen> datos = Arrays.asList(
                 new Examen(5L, "Matematicas"),
                 new Examen(6L, "Lenguaje")
         );
         //Cuando se llame al metodo findAll() de la interfaz ExamenRepository, se devolvera la lista datos
-        //Mockito.when(examenRepository.findAll()).thenReturn(datos);
-        //cuando se llame devuelva vacio
-        Mockito.when(examenRepository.findAll()).thenReturn(Arrays.asList());
+        Mockito.when(examenRepository.findAll()).thenReturn(datos);
 
-        Examen examen = examenServices.buscarExamenPorNombre("Matematicas");
-        assertNull(examen);
+        Examen examen = services.buscarExamenPorNombre("Matematicas");
+        assertNotNull(examen);
+        assertEquals("Matematicas", examen.getNombre());
+
+    }
+    @Test
+    void testConMockitoVacio() {
+        //Creamos una instancia de la interfaz ExamenRepository con mockito
+        ExamenRepository examenRepository = Mockito.mock(ExamenRepository.class);
+        ExamenServicios services = new ExamenServicesImpl(examenRepository);
+
+        List<Examen> datos = List.of();
+        //Cuando se llame al metodo findAll() de la interfaz ExamenRepository, se devolvera la lista datos
+        Mockito.when(examenRepository.findAll()).thenReturn(datos);
+
+        Examen examen = services.buscarExamenPorNombre("Matematicas");
+        try {
+            assertNull(examen);
+            System.out.println("el examen es null con mockito");
+        } catch (NullPointerException e) {
+            System.out.println("e.getMessage() = " + e.getMessage());
+        }
+
+
     }
 }
