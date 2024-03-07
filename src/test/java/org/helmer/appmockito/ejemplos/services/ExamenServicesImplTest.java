@@ -2,6 +2,7 @@ package org.helmer.appmockito.ejemplos.services;
 
 import org.helmer.appmockito.ejemplos.dao.ExamenRepository;
 import org.helmer.appmockito.ejemplos.dao.ExamenRepositoryImpl;
+import org.helmer.appmockito.ejemplos.dao.ExamenRepositoryOtro;
 import org.helmer.appmockito.ejemplos.models.Examen;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -71,4 +72,22 @@ class ExamenServicesImplTest {
 
     }
 
+    @Test
+    void testConMockito2() {
+        //Creamos una instancia de la interfaz ExamenRepository con mockito
+        ExamenRepository examenRepository = Mockito.mock(ExamenRepositoryOtro.class);
+        ExamenServicios examenServices = new ExamenServicesImpl(examenRepository);
+
+        List<Examen> datos = Arrays.asList(
+                new Examen(5L, "Matematicas"),
+                new Examen(6L, "Lenguaje")
+        );
+        //Cuando se llame al metodo findAll() de la interfaz ExamenRepository, se devolvera la lista datos
+        //Mockito.when(examenRepository.findAll()).thenReturn(datos);
+        //cuando se llame devuelva vacio
+        Mockito.when(examenRepository.findAll()).thenReturn(Arrays.asList());
+
+        Examen examen = examenServices.buscarExamenPorNombre("Matematicas");
+        assertNull(examen);
+    }
 }
