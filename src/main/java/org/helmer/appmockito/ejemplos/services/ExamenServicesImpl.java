@@ -1,18 +1,23 @@
 package org.helmer.appmockito.ejemplos.services;
 
 import org.helmer.appmockito.ejemplos.dao.ExamenRepository;
+import org.helmer.appmockito.ejemplos.dao.PreguntasRepository;
 import org.helmer.appmockito.ejemplos.models.Examen;
 
+import java.util.List;
 import java.util.Optional;
 
 
 public class ExamenServicesImpl implements ExamenServicios {
     private final ExamenRepository examenRepository;
+    private final PreguntasRepository preguntasRepository;
 
-    public ExamenServicesImpl(ExamenRepository examenRepository) {
+    public ExamenServicesImpl(ExamenRepository examenRepository, PreguntasRepository preguntasRepository) {
+        this.preguntasRepository= preguntasRepository;
         this.examenRepository = examenRepository;
     }
 
+    /*CODIGO ANTIGUO*/
     /*
         @Override
         public Examen buscarExamenPorNombre(String nombre) {
@@ -26,7 +31,7 @@ public class ExamenServicesImpl implements ExamenServicios {
 
             Examen examen = null;
             if(examenOptional.isPresent()){
-               /* El método get() y orElseThrow() son métodos de la clase Optional en Java. Ambos se utilizan para obtener el valor presente en el objeto Optional, pero se comportan de manera diferente cuando el objeto Optional está vacío (es decir, no contiene ningún valor).
+                El método get() y orElseThrow() son métodos de la clase Optional en Java. Ambos se utilizan para obtener el valor presente en el objeto Optional, pero se comportan de manera diferente cuando el objeto Optional está vacío (es decir, no contiene ningún valor).
                         *get(): Este método devolverá el valor presente en el objeto Optional si existe. Sin embargo, si el objeto Optional está vacío, lanzará una excepción NoSuchElementException.
                         *orElseThrow(): Este método también devolverá el valor presente en el objeto Optional si existe. Pero a diferencia de get(), permite personalizar la excepción que se lanza cuando el objeto Optional está vacío. Si no se proporciona una excepción personalizada, también lanzará una NoSuchElementException.
 
@@ -41,5 +46,18 @@ public class ExamenServicesImpl implements ExamenServicios {
                 .stream()
                 .filter(e -> e.getNombre().contains(nombre)).
                 findFirst();
+    }
+
+    @Override
+    public Examen findExamenPorNombreConPreguntas(String nombre) {
+        Optional<Examen> examenOptional = buscarExamenPorNombre(nombre);
+        Examen examen = null;
+        if(examenOptional.isPresent()){
+            examen = examenOptional.get();
+            List<String> preguntas = preguntasRepository.findPreguntasPorExamenId(examen.getId());
+            examen.setPreguntas(preguntas);
+
+        }
+        return examen;
     }
 }

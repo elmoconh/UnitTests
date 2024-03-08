@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface ExamenServicios {
     Optional<Examen> buscarExamenPorNombre(String nombre);
-
+    Examen findExamenPorNombreConPreguntas(String nombre);
 
 }
