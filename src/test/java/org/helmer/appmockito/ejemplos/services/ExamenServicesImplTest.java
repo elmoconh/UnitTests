@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,6 +99,25 @@ class ExamenServicesImplTest {
         ExamenServicios services = new ExamenServicesImpl(examenRepository);
 
         List<Examen> datos = List.of();
+        //Cuando se llame al metodo findAll() de la interfaz ExamenRepository, se devolvera la lista datos
+        Mockito.when(examenRepository.findAll()).thenReturn(datos);
+
+        Optional<Examen> examen = services.buscarExamenPorNombre("Matematicas");
+        try {
+            assertEquals(Optional.empty(), examen);
+            System.out.println("el examen es null con mockito");
+        } catch (NullPointerException e) {
+            System.out.println("e.getMessage() = " + e.getMessage());
+        }
+    }
+
+    @Test
+    void testConListaVacia() {
+        //Creamos una instancia de la interfaz ExamenRepository con mockito
+        ExamenRepository examenRepository = Mockito.mock(ExamenRepository.class);
+        ExamenServicios services = new ExamenServicesImpl(examenRepository);
+
+        List<Examen> datos = Collections.emptyList();
         //Cuando se llame al metodo findAll() de la interfaz ExamenRepository, se devolvera la lista datos
         Mockito.when(examenRepository.findAll()).thenReturn(datos);
 
