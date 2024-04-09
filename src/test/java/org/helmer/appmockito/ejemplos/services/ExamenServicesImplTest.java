@@ -108,7 +108,5 @@ class ExamenServicesImplTest {
         } catch (NullPointerException e) {
             System.out.println("e.getMessage() = " + e.getMessage());
         }
-
-
     }
 }
