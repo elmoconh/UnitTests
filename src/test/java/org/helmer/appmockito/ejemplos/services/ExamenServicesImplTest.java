@@ -2,8 +2,8 @@ package org.helmer.appmockito.ejemplos.services;
 
 import org.helmer.appmockito.ejemplos.dao.ExamenRepository;
 import org.helmer.appmockito.ejemplos.dao.ExamenRepositoryImpl;
-import org.helmer.appmockito.ejemplos.dao.ExamenRepositoryOtro;
 import org.helmer.appmockito.ejemplos.models.Examen;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -13,21 +13,27 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 class ExamenServicesImplTest {
-    //este es un test reaizado con JUnit 5
+    ExamenRepository examenRepository;
+    ExamenServicesImpl examenServices;
+    @BeforeEach
+    void setUp() {
+        examenRepository = mock (ExamenRepositoryImpl.class);
+        //Creamos una instancia de la clase ExamenServicesImpl
+        examenServices = new ExamenServicesImpl(examenRepository);
+    }
+
+    /*este es un test reaizado con JUnit 5
     @Test
     void buscarExamenPorNombreTest() {
-        //Primero creamos una instancia de la interfaz ExamenRepository
-        ExamenRepository examenRepository = new ExamenRepositoryImpl();
-        //Creamos una instancia de la clase ExamenServicesImpl
-        ExamenServicesImpl examenServices = new ExamenServicesImpl(examenRepository);
         //Creamos una instancia de la clase Examen
         Optional<Examen> examen = examenServices.buscarExamenPorNombre("Matematicas");
         //Comprobamos que el nombre del examen sea igual a "Matematicas"
         assertEquals("Matematicas", examen.orElseThrow().getNombre());
     }
-
+*/
     //test con mockito
 
     /*
@@ -55,14 +61,10 @@ class ExamenServicesImplTest {
      */
     @Test
     void testConMockito() {
-        //Creamos una instancia de la interfaz ExamenRepository con mockito
-        ExamenRepository examenRepository = Mockito.mock(ExamenRepository.class);
-        ExamenServicios examenServices = new ExamenServicesImpl(examenRepository);
-
         List<Examen> datos = Arrays.asList(
-                        new Examen(5L, "Matematicas"),
-                        new Examen(6L, "Lenguaje")
-                );
+                new Examen(5L, "Matematicas"),
+                new Examen(6L, "Lenguaje")
+        );
         //Cuando se llame al metodo findAll() de la interfaz ExamenRepository, se devolvera la lista datos
         Mockito.when(examenRepository.findAll()).thenReturn(datos);
         //cuando se llame devuelva vacio
@@ -76,10 +78,6 @@ class ExamenServicesImplTest {
 
     @Test
     void testConMockito2() {
-        //Creamos una instancia de la interfaz ExamenRepository con mockito
-        ExamenRepository examenRepository = Mockito.mock(ExamenRepositoryOtro.class);
-        ExamenServicios services = new ExamenServicesImpl(examenRepository);
-
         List<Examen> datos = Arrays.asList(
                 new Examen(5L, "Matematicas"),
                 new Examen(6L, "Lenguaje")
@@ -87,22 +85,19 @@ class ExamenServicesImplTest {
         //Cuando se llame al metodo findAll() de la interfaz ExamenRepository, se devolvera la lista datos
         Mockito.when(examenRepository.findAll()).thenReturn(datos);
 
-        Optional<Examen> examen = services.buscarExamenPorNombre("Matematicas");
+        Optional<Examen> examen = examenServices.buscarExamenPorNombre("Matematicas");
         assertNotNull(examen);
         assertEquals("Matematicas", examen.orElseThrow().getNombre());
 
     }
     @Test
     void testConMockitoVacio() {
-        //Creamos una instancia de la interfaz ExamenRepository con mockito
-        ExamenRepository examenRepository = Mockito.mock(ExamenRepository.class);
-        ExamenServicios services = new ExamenServicesImpl(examenRepository);
 
         List<Examen> datos = List.of();
         //Cuando se llame al metodo findAll() de la interfaz ExamenRepository, se devolvera la lista datos
         Mockito.when(examenRepository.findAll()).thenReturn(datos);
 
-        Optional<Examen> examen = services.buscarExamenPorNombre("Matematicas");
+        Optional<Examen> examen = examenServices.buscarExamenPorNombre("Matematicas");
         try {
             assertEquals(Optional.empty(), examen);
             System.out.println("el examen es null con mockito");
@@ -113,15 +108,11 @@ class ExamenServicesImplTest {
 
     @Test
     void testConListaVacia() {
-        //Creamos una instancia de la interfaz ExamenRepository con mockito
-        ExamenRepository examenRepository = Mockito.mock(ExamenRepository.class);
-        ExamenServicios services = new ExamenServicesImpl(examenRepository);
-
         List<Examen> datos = Collections.emptyList();
         //Cuando se llame al metodo findAll() de la interfaz ExamenRepository, se devolvera la lista datos
         Mockito.when(examenRepository.findAll()).thenReturn(datos);
 
-        Optional<Examen> examen = services.buscarExamenPorNombre("Matematicas");
+        Optional<Examen> examen = examenServices.buscarExamenPorNombre("Matematicas");
         try {
             assertEquals(Optional.empty(), examen);
             System.out.println("el examen es null con mockito");
