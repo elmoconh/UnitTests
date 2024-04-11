@@ -2,6 +2,7 @@ package org.helmer.appmockito.ejemplos.services;
 
 import org.helmer.appmockito.ejemplos.dao.ExamenRepository;
 import org.helmer.appmockito.ejemplos.dao.ExamenRepositoryImpl;
+import org.helmer.appmockito.ejemplos.dao.PreguntaRepository;
 import org.helmer.appmockito.ejemplos.models.Examen;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,11 +19,15 @@ import static org.mockito.Mockito.mock;
 class ExamenServicesImplTest {
     ExamenRepository examenRepository;
     ExamenServicesImpl examenServices;
+    PreguntaRepository preguntaRepository;
+
     @BeforeEach
     void setUp() {
         examenRepository = mock (ExamenRepositoryImpl.class);
+        preguntaRepository = mock(PreguntaRepository.class);
         //Creamos una instancia de la clase ExamenServicesImpl
-        examenServices = new ExamenServicesImpl(examenRepository);
+        examenServices = new ExamenServicesImpl(examenRepository, preguntaRepository);
+
     }
 
     /*este es un test reaizado con JUnit 5
@@ -61,12 +66,8 @@ class ExamenServicesImplTest {
      */
     @Test
     void testConMockito() {
-        List<Examen> datos = Arrays.asList(
-                new Examen(5L, "Matematicas"),
-                new Examen(6L, "Lenguaje")
-        );
         //Cuando se llame al metodo findAll() de la interfaz ExamenRepository, se devolvera la lista datos
-        Mockito.when(examenRepository.findAll()).thenReturn(datos);
+        Mockito.when(examenRepository.findAll()).thenReturn(Datos.EXAMENES);
         //cuando se llame devuelva vacio
         //Mockito.when(examenRepository.findAll()).thenReturn(Arrays.asList());
 
@@ -120,4 +121,5 @@ class ExamenServicesImplTest {
             System.out.println("e.getMessage() = " + e.getMessage());
         }
     }
+
 }
