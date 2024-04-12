@@ -10,5 +10,12 @@ public class Datos {
             new Examen(5L, "Matematicas"),
             new Examen(6L, "Lenguaje")
     );
+    public final static List<String> PREGUNTAS = Arrays.asList(
+            "aritmetica",
+            "integrales",
+            "derivadas",
+            "trigonometria",
+            "geometria"
+    );
 
 }

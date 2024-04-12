@@ -9,8 +9,8 @@ import java.util.Optional;
 
 
 public class ExamenServicesImpl implements ExamenServicios {
-    private ExamenRepository examenRepository;
-    private PreguntaRepository preguntaRepository;
+    private final ExamenRepository examenRepository;
+    private final PreguntaRepository preguntaRepository;
 
     public ExamenServicesImpl(ExamenRepository examenRepository, PreguntaRepository preguntaRepository) {
         this.examenRepository = examenRepository;

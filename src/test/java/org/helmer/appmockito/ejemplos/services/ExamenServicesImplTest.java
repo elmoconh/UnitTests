@@ -121,5 +121,13 @@ class ExamenServicesImplTest {
             System.out.println("e.getMessage() = " + e.getMessage());
         }
     }
+    @Test
+    void testPreguntasExamen(){
+        Mockito.when(examenRepository.findAll()).thenReturn(Datos.EXAMENES);
+        Mockito.when(preguntaRepository.findPreguntasPorExamenId(5L)).thenReturn(Datos.PREGUNTAS);
+        Examen examen = examenServices.findExamenPorNombreConPreguntas("Matematicas");
+        System.out.println("Pasa correctamente");
+        assertEquals(5, examen.getPreguntas().size());
+    }
 
 }
