@@ -5,7 +5,7 @@ import org.helmer.appmockito.ejemplos.models.Examen;
 import java.util.Arrays;
 import java.util.List;
 
-public class ExamenRepositoryImpl implements ExamenRepository {
+public class     ExamenRepositoryImpl implements ExamenRepository {
     //@Override indica que estamos sobreescribiendo un metodo de la interfaz ExamenRepository
     @Override
     public List<Examen> findAll() {
