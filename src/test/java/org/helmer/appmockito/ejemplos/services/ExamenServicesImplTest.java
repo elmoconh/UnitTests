@@ -8,9 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,18 +31,11 @@ class ExamenServicesImplTest {
         Mockito.when(examenRepository.findAll()).thenReturn(Datos.EXAMENES);
         Optional<Examen> examen = examenServices.buscarExamenPorNombre("Matematicas");
         assertEquals("Matematicas", examen.orElseThrow().getNombre());
-
-
     }
 
     @Test
     void testConMockito2() {
-        List<Examen> datos = Arrays.asList(
-                new Examen(5L, "Matematicas"),
-                new Examen(6L, "Lenguaje")
-        );
-        Mockito.when(examenRepository.findAll()).thenReturn(datos);
-
+        Mockito.when(examenRepository.findAll()).thenReturn(Datos.EXAMENES);
         Optional<Examen> examen = examenServices.buscarExamenPorNombre("Matematicas");
         assertNotNull(examen);
         assertEquals("Matematicas", examen.orElseThrow().getNombre());
@@ -54,10 +44,7 @@ class ExamenServicesImplTest {
 
     @Test
     void testConMockitoVacio() {
-
-        List<Examen> datos = List.of();
-        Mockito.when(examenRepository.findAll()).thenReturn(datos);
-
+        Mockito.when(examenRepository.findAll()).thenReturn(Datos.VACIO);
         Optional<Examen> examen = examenServices.buscarExamenPorNombre("Matematicas");
         try {
             assertEquals(Optional.empty(), examen);
@@ -69,9 +56,7 @@ class ExamenServicesImplTest {
 
     @Test
     void testConListaVacia() {
-        List<Examen> datos = Collections.emptyList();
-        Mockito.when(examenRepository.findAll()).thenReturn(datos);
-
+        Mockito.when(examenRepository.findAll()).thenReturn(Datos.VACIO);
         Optional<Examen> examen = examenServices.buscarExamenPorNombre("Matematicas");
         try {
             assertEquals(Optional.empty(), examen);

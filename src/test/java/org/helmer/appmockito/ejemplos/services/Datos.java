@@ -3,6 +3,7 @@ package org.helmer.appmockito.ejemplos.services;
 import org.helmer.appmockito.ejemplos.models.Examen;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Datos {
@@ -17,5 +18,7 @@ public class Datos {
             "trigonometria",
             "geometria"
     );
+
+    public final static List<Examen> VACIO = Collections.emptyList();
 
 }
