@@ -1,5 +1,6 @@
 package org.helmer.appmockito.ejemplos.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Examen {
@@ -10,6 +11,7 @@ public class Examen {
     public Examen(Long id, String nombre) {
         this.id = id;
         this.nombre = nombre;
+        this.preguntas = new ArrayList<>();
     }
 
     public Long getId() {

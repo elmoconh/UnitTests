@@ -12,6 +12,7 @@ public class ExamenServicesImpl implements ExamenServicios {
     private final ExamenRepository examenRepository;
     private final PreguntaRepository preguntaRepository;
 
+
     public ExamenServicesImpl(ExamenRepository examenRepository, PreguntaRepository preguntaRepository) {
         this.examenRepository = examenRepository;
         this.preguntaRepository = preguntaRepository;
@@ -34,5 +35,13 @@ public class ExamenServicesImpl implements ExamenServicios {
             examen.setPreguntas(preguntas);
         }
         return examen;
+    }
+
+    @Override
+    public Examen guardar(Examen examen) {
+        if(!examen.getPreguntas().isEmpty()){
+            preguntaRepository.guardarVarias(examen.getPreguntas());
+        }
+        return examenRepository.guardar(examen);
     }
 }

@@ -1,28 +1,46 @@
 package org.helmer.appmockito.ejemplos.services;
 
 import org.helmer.appmockito.ejemplos.dao.ExamenRepository;
-import org.helmer.appmockito.ejemplos.dao.ExamenRepositoryImpl;
 import org.helmer.appmockito.ejemplos.dao.PreguntaRepository;
 import org.helmer.appmockito.ejemplos.models.Examen;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class ExamenServicesImplTest {
+//ExtendWith nos permite extender la funcionalidad de JUnit5 con Mockito para poder utilizar las anotaciones de Mockito
+//ExtendWith recibe como parametro la clase MockitoExtension.class
+@ExtendWith(MockitoExtension.class)
 
+class ExamenServicesImplTest {
+    @Mock
     ExamenRepository examenRepository;
-    ExamenServicesImpl examenServices;
+
+    @Mock
     PreguntaRepository preguntaRepository;
+
+    //La inyeccion de dependencias se realiza mediante la anotacion @InjectMocks,
+    //con esto se inyectan los mocks en la clase que se va a probar
+
+    @InjectMocks
+    ExamenServicesImpl examenServices;
 
     @BeforeEach
     void setUp() {
-        examenRepository = mock(ExamenRepositoryImpl.class);
+        //FORMA 1: Inicializa los mocks mediante la anotacion @Mock
+        //MockitoAnnotations.openMocks(this);
+
+        /* NO SE USA:  examenRepository = mock(ExamenRepositoryImpl.class);
         preguntaRepository = mock(PreguntaRepository.class);
-        examenServices = new ExamenServicesImpl(examenRepository, preguntaRepository);
+        examenServices = new ExamenServicesImpl(examenRepository, preguntaRepository);*/
+
 
     }
 
@@ -98,6 +116,16 @@ class ExamenServicesImplTest {
 
         //Estamos simulando una falla ya que el metodo findAll devuelve una lista vacia, por lo que no se deberia llamar al metodo findPreguntasPorExamenId
         verify(preguntaRepository).findPreguntasPorExamenId(5L);
+    }
+
+    @Test
+    void testGuardarExamen() {
+        when(examenRepository.guardar(any(Examen.class))).thenReturn(Datos.EXAMEN);
+        Examen examen = examenServices.guardar(Datos.EXAMEN);
+        assertNotNull(examen.getId());
+       // assertEquals(8L, examen.getId());
+        //assertEquals("Fisica", examen.getNombre());
+
     }
 
 }
