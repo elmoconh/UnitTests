@@ -6,12 +6,11 @@ import org.helmer.appmockito.ejemplos.dao.PreguntaRepository;
 import org.helmer.appmockito.ejemplos.models.Examen;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 class ExamenServicesImplTest {
 
@@ -29,14 +28,15 @@ class ExamenServicesImplTest {
 
     @Test
     void testConMockito() {
-        Mockito.when(examenRepository.findAll()).thenReturn(Datos.EXAMENES);
+        //when se utiliza para simular el comportamiento de un metodo de una clase que no se ha implementado aun
+        when(examenRepository.findAll()).thenReturn(Datos.EXAMENES);
         Optional<Examen> examen = examenServices.buscarExamenPorNombre("Matematicas");
         assertEquals("Matematicas", examen.orElseThrow().getNombre());
     }
 
     @Test
     void testConMockito2() {
-        Mockito.when(examenRepository.findAll()).thenReturn(Datos.EXAMENES);
+        when(examenRepository.findAll()).thenReturn(Datos.EXAMENES);
         Optional<Examen> examen = examenServices.buscarExamenPorNombre("Matematicas");
         assertNotNull(examen);
         assertEquals("Matematicas", examen.orElseThrow().getNombre());
@@ -45,7 +45,7 @@ class ExamenServicesImplTest {
 
     @Test
     void testConMockitoVacio() {
-        Mockito.when(examenRepository.findAll()).thenReturn(Datos.VACIO);
+        when(examenRepository.findAll()).thenReturn(Datos.VACIO);
         Optional<Examen> examen = examenServices.buscarExamenPorNombre("Matematicas");
         try {
             assertEquals(Optional.empty(), examen);
@@ -57,7 +57,7 @@ class ExamenServicesImplTest {
 
     @Test
     void testConListaVacia() {
-        Mockito.when(examenRepository.findAll()).thenReturn(Datos.VACIO);
+        when(examenRepository.findAll()).thenReturn(Datos.VACIO);
         Optional<Examen> examen = examenServices.buscarExamenPorNombre("Matematicas");
         try {
             assertEquals(Optional.empty(), examen);
@@ -69,11 +69,35 @@ class ExamenServicesImplTest {
 
     @Test
     void testPreguntasExamen() {
-        Mockito.when(examenRepository.findAll()).thenReturn(Datos.EXAMENES);
-        Mockito.when(preguntaRepository.findPreguntasPorExamenId(5L)).thenReturn(Datos.PREGUNTAS);
+        when(examenRepository.findAll()).thenReturn(Datos.EXAMENES);
+        when(preguntaRepository.findPreguntasPorExamenId(5L)).thenReturn(Datos.PREGUNTAS);
         Examen examen = examenServices.findExamenPorNombreConPreguntas("Matematicas");
-        System.out.println("Pasa correctamente");
         assertEquals(5, examen.getPreguntas().size());
+    }
+
+    @Test
+    void testPreguntasExamenVerify() {
+        when(examenRepository.findAll()).thenReturn(Datos.EXAMENES);
+        when(preguntaRepository.findPreguntasPorExamenId(5L)).thenReturn(Datos.PREGUNTAS);
+        Examen examen = examenServices.findExamenPorNombreConPreguntas("Matematicas");
+        assertEquals(5, examen.getPreguntas().size());
+        //Verify nos permite verificar que un metodo se haya llamado o no
+        verify(examenRepository).findAll();
+        verify(preguntaRepository).findPreguntasPorExamenId(5L);
+    }
+
+    @Test
+    void testNoExisteExamenVerify() {
+        when(examenRepository.findAll()).thenReturn(Datos.VACIO);
+        when(preguntaRepository.findPreguntasPorExamenId(5L)).thenReturn(Datos.PREGUNTAS);
+        Examen examen = examenServices.findExamenPorNombreConPreguntas("Matematicas");
+        assertNull(examen);
+
+        //Verify nos permite verificar que un metodo se haya llamado o no
+        verify(examenRepository).findAll();
+
+        //Estamos simulando una falla ya que el metodo findAll devuelve una lista vacia, por lo que no se deberia llamar al metodo findPreguntasPorExamenId
+        verify(preguntaRepository).findPreguntasPorExamenId(5L);
     }
 
 }
