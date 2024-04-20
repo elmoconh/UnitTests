@@ -125,7 +125,7 @@ class ExamenServicesImplTest {
         Examen newExamen = Datos.EXAMEN;
         newExamen.setPreguntas(Datos.PREGUNTAS);
 
-        when(examenRepository.guardar(any(Examen.class))).then(new Answer<Examen>() {
+        when(examenRepository.guardar(newExamen)).then(new Answer<Examen>() {
             Long secuencia = 8L;
 
             @Override
