@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 
 import java.util.Optional;
 
@@ -18,7 +20,6 @@ import static org.mockito.Mockito.*;
 //ExtendWith nos permite extender la funcionalidad de JUnit5 con Mockito para poder utilizar las anotaciones de Mockito
 //ExtendWith recibe como parametro la clase MockitoExtension.class
 @ExtendWith(MockitoExtension.class)
-
 class ExamenServicesImplTest {
     @Mock
     ExamenRepository examenRepository;
@@ -120,11 +121,30 @@ class ExamenServicesImplTest {
 
     @Test
     void testGuardarExamen() {
-        when(examenRepository.guardar(any(Examen.class))).thenReturn(Datos.EXAMEN);
-        Examen examen = examenServices.guardar(Datos.EXAMEN);
+        //GIVEN - Configuracion de los mocks
+        Examen newExamen = Datos.EXAMEN;
+        newExamen.setPreguntas(Datos.PREGUNTAS);
+
+        when(examenRepository.guardar(any(Examen.class))).then(new Answer<Examen>() {
+            Long secuencia = 8L;
+
+            @Override
+            public Examen answer(InvocationOnMock invocation) {
+                Examen examen = invocation.getArgument(0);
+                examen.setId(secuencia++);
+                return examen;
+            }
+        });
+
+        //WHEN - Ejecucion del metodo a probar
+        Examen examen = examenServices.guardar(newExamen);
+
+        //THEN - Verificacion del resultado
         assertNotNull(examen.getId());
-       // assertEquals(8L, examen.getId());
-        //assertEquals("Fisica", examen.getNombre());
+        assertEquals(8L, examen.getId());
+        assertEquals("Fisica", examen.getNombre());
+        verify(examenRepository).guardar(any(Examen.class));
+        verify(preguntaRepository).guardarVarias(anyList());
 
     }
 
